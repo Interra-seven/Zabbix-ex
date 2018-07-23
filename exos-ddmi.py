@@ -6,7 +6,7 @@ import telnetlib
 import re
 
 lst_fin = []
-rgx = re.compile('([0-9]+)[ ]+([0-9.]+)[ ]+([0-9.]+)[ ]+([0-9.-]+)')
+rgx = re.compile('^([0-9]+)[ ]+([0-9.]+)[ ]+([0-9.-]+)[ ]+([0-9.-]+)')
 
 if len(sys.argv) == 4:
         tln = telnetlib.Telnet(sys.argv[1],23,5)
@@ -14,12 +14,11 @@ if len(sys.argv) == 4:
         tln.write(sys.argv[2] + "\n")
         tln.read_until("password: ",5)
         tln.write(sys.argv[3] + "\n")
-        tln.write('show ports transceiver information | exclude ignore-case [this][inf]\n')
+        tln.write('show ports transceiver information | exclude ignore-case [this]\n')
         data = str(tln.read_until(' >',5))
         data2 = (str(tln.read_until(' >',5))).split("\r\n")
         tln.write("logout\n")
         tln.close()
-#	print data2
 	for i in range (len(data2)):
 		fnd = rgx.search(data2[i])
 		if fnd != None:
